@@ -19,6 +19,8 @@ Fitness
 --------------------------
 Robots that had the best fitness were written in the parallelHillClimber file which measured the robots ability to move along the negative part of the x-axis. Higher fitnesses were saved and compared to next generations. The fitness function was used againt 100 generations and a population size of 3. Larger generations and populations can/should be used for computer with higher processing power. Here are five fitness curves of the best creatures.
 
+[396HW8 fitness charts.pdf](https://github.com/Mr-Mango753/396mybotsHW8/files/10844856/396HW8.fitness.charts.pdf)
+
 
 -----------------------------
 Credit: Much of the code and the information used to make these robots were taken from the ludobots subreddit: https://www.reddit.com/r/ludobots/
