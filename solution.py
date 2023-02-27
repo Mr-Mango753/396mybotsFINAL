@@ -86,12 +86,13 @@ class SOLUTION:
 
         def getjointPosForRoot(i, x , y, z):
             jointPos = []
-            if i == 0: jointPos = [x/2, randValue(y), randValue(z) + (self.findZ/2)]
-            elif i == 1: jointPos = [-x/2, randValue(y), randValue(z) + (self.findZ/2)]
-            elif i == 2: jointPos = [randValue(x), y/2, randValue(z) + (self.findZ/2)]
-            elif i == 3: jointPos = [randValue(x), -y/2, randValue(z) + (self.findZ/2)]
-            elif i == 4: jointPos = [randValue(x), randValue(y), (z/2) + (self.findZ/2)]
-            elif i == 5: jointPos = [randValue(x), randValue(y), (-z/2) + (self.findZ/2)]
+            match i:
+                case 0: jointPos = [x/2, randValue(y), randValue(z) + (self.findZ/2)]
+                case 1: jointPos = [-x/2, randValue(y), randValue(z) + (self.findZ/2)]
+                case 2: jointPos = [randValue(x), y/2, randValue(z) + (self.findZ/2)]
+                case 3: jointPos = [randValue(x), -y/2, randValue(z) + (self.findZ/2)]
+                case 4: jointPos = [randValue(x), randValue(y), (z/2) + (self.findZ/2)]
+                case 5: jointPos = [randValue(x), randValue(y), (-z/2) + (self.findZ/2)]
             return jointPos
         if not self.created:
             self.created = True
@@ -99,25 +100,24 @@ class SOLUTION:
             self.motors = []
             pyrosim.Start_URDF("body" + str(self.myID) + ".urdf")
             self.areaLink = {}
-            self.sideGraph = {}
-            self.edge_graph = {}
+            self.linktoSidesDict = {}
+            self.linkJointDict = {}
             self.parentDict = {}
             self.labels = {}
             self.joint_parent_child = {}
-            self.joint_positions = {}
-            self.joint_axis = {}
-            self.link_sensor_check = {}
-            self.link_positions = {}
-            self.link_sizes = {}
-            #generate sizes
+            self.jointPosDict = {}
+            self.jointAxisDict = {}
+            self.sensorExists = {}
+            self.linkPos = {}
+            self.linkSize = {}
             for i in range(c.numoflinks):
-                rand_x = random.random()
-                rand_y = random.random()
-                rand_z = random.random()
-                area = rand_x*rand_y*rand_z
-                self.areaLink[(rand_x, rand_y, rand_z)] = area
-                self.sideGraph[(rand_x, rand_y, rand_z)] = [None, None, None, None, None, None] #+x -x +y -y +z -z
-                self.edge_graph[(rand_x, rand_y, rand_z)] = []
+                randX = random.random()
+                randY = random.random()
+                randZ = random.random()
+                volume = randX*randY*randZ
+                self.areaLink[(randX, randY, randZ)] = volume
+                self.linktoSidesDict[(randX, randY, randZ)] = [None, None, None, None, None, None] #+x -x +y -y +z -z
+                self.linkJointDict[(randX, randY, randZ)] = []
             self.areaSort = sorted(self.areaLink, key=self.areaLink.get, reverse=True)
             label = 0
             for s in self.areaSort:
@@ -129,24 +129,24 @@ class SOLUTION:
                 larger_blocks = self.areaSort[:i]
                 while True:
                     choose_block = random.choice(larger_blocks)
-                    if len(self.edge_graph[choose_block]) < 6:
-                        self.edge_graph[choose_block].append(link)
+                    if len(self.linkJointDict[choose_block]) < 6:
+                        self.linkJointDict[choose_block].append(link)
                         break
                     larger_blocks.remove(choose_block)
             self.findZ = (len(self.areaSort)*3/2)
             for i, link in enumerate(self.areaSort):
                 if i == 0:
                     self.parentDict[link] = None
-                connectLinks = self.edge_graph[link]
-                available_indices = [i for i, x in enumerate(self.sideGraph[link]) if x is None]
+                connectLinks = self.linkJointDict[link]
+                available_indices = [i for i, x in enumerate(self.linktoSidesDict[link]) if x is None]
                 for connectLink in connectLinks:
                     chosen_side = random.choice(available_indices)
-                    self.sideGraph[link][chosen_side] = connectLink
+                    self.linktoSidesDict[link][chosen_side] = connectLink
                     if chosen_side % 2 == 0:
-                        self.sideGraph[connectLink][chosen_side+1] = []
+                        self.linktoSidesDict[connectLink][chosen_side+1] = []
                         self.parentDict[connectLink] = chosen_side+1
                     else:
-                        self.sideGraph[connectLink][chosen_side-1] = []
+                        self.linktoSidesDict[connectLink][chosen_side-1] = []
                         self.parentDict[connectLink] = chosen_side-1
                     available_indices.remove(chosen_side)
 
@@ -160,30 +160,30 @@ class SOLUTION:
                     if sensorCheck > 0.5:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]), pos=[0, 0, self.findZ/2.0], size=list(link), material_name="Green", rgba="0 1 0 1")
                         self.sensors.append(self.labels[link])
-                        self.link_sensor_check[self.labels[link]] = True
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = [0, 0, self.findZ/2.0]
+                        self.sensorExists[self.labels[link]] = True
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = [0, 0, self.findZ/2.0]
                     else:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]), pos=[0, 0, self.findZ/2.0], size=list(link))
-                        self.link_sensor_check[self.labels[link]] = False
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = [0, 0, self.findZ/2.0]
+                        self.sensorExists[self.labels[link]] = False
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = [0, 0, self.findZ/2.0]
                 else:
                     sensorCheck = random.random()
                     position = findDir(parent_direction)
                     if sensorCheck > 0.5:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]), pos=position, size=list(link), material_name="Green", rgba="0 1 0 1")
                         self.sensors.append(self.labels[link])
-                        self.link_sensor_check[self.labels[link]] = True
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = position
+                        self.sensorExists[self.labels[link]] = True
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = position
                     else:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]), pos=position,
                                           size=list(link))
-                        self.link_sensor_check[self.labels[link]] = False
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = position
-                connectLinks = self.sideGraph[link]
+                        self.sensorExists[self.labels[link]] = False
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = position
+                connectLinks = self.linktoSidesDict[link]
                 for i, connectLink in enumerate(connectLinks):
                     if connectLink == None or connectLink == []:
                         continue
@@ -200,8 +200,8 @@ class SOLUTION:
                     pyrosim.Send_Joint(name=jointName, parent="Link" + str(self.labels[link]),child="Link" + str(self.labels[connectLink]),type="revolute",position=jointPos,jointAxis=randomjoint)
                     self.motors.append(jointName)
                     self.joint_parent_child[jointName] = {'parent':"Link" + str(self.labels[link]),'child':"Link" + str(self.labels[connectLink])}
-                    self.joint_positions[jointName] = jointPos
-                    self.joint_axis[jointName] = randomjoint
+                    self.jointPosDict[jointName] = jointPos
+                    self.jointAxisDict[jointName] = randomjoint
             pyrosim.End()
             
     def Create_Brain(self):
@@ -252,7 +252,6 @@ class SOLUTION:
                 case 4: randArray[2] += z/2 - randZ
                 case 5: randArray[2] += -z/2 - randZ
             return randArray
-
         def findDir(parent_direction, link):
             position = []
             match parent_direction:
@@ -273,41 +272,39 @@ class SOLUTION:
             elif i == 4:jointPos = [randValue(x), randValue(y), (z/2) + (self.findZ/2)]
             elif i == 5:jointPos = [randValue(x), randValue(y), (-z/2) + (self.findZ/2)]
             return jointPos
-        evolve_option = random.randint(3, 4)
-        if evolve_option == 3:
+        mutateType = random.randint(0, 1)
+        if mutateType == 0:
             os.system("del body" + str(self.myID) + ".urdf")
-            addorsubtract = random.random()
-            if addorsubtract < 0.5 and len(self.areaSort) > 2:
-                link_to_remove = random.choice(list(self.areaSort))
-                self.areaSort.remove(link_to_remove)
-                self.areaLink.pop(link_to_remove)
-                self.sideGraph.pop(link_to_remove)
-                self.edge_graph.pop(link_to_remove)
+            addorsubtract = random.randint(0,1)
+            if addorsubtract == 0 and len(self.areaSort) > 2:
+                removeLink = random.choice(list(self.areaSort))
+                self.areaSort.remove(removeLink)
+                self.areaLink.pop(removeLink)
+                self.linktoSidesDict.pop(removeLink)
+                self.linkJointDict.pop(removeLink)
             else:
-                rand_x = random.random()
-                rand_y = random.random()
-                rand_z = random.random()
-                area = rand_x * rand_y * rand_z
-
-                new_link = (rand_x, rand_y, rand_z)
-                self.areaLink[new_link] = area
-                self.sideGraph[new_link] = [None] * 6 
-                self.edge_graph[new_link] = []
+                randX = random.random()
+                randY = random.random()
+                randZ = random.random()
+                volume = randX * randY * randZ
+                newLink = (randX, randY, randZ)
+                self.areaLink[newLink] = volume
+                self.linktoSidesDict[newLink] = [None] * 6 
+                self.linkJointDict[newLink] = []
             self.sensors = []
             self.motors = []
             pyrosim.Start_URDF("body" + str(self.myID) + ".urdf")
             self.parentDict = {}
             self.labels = {}
             self.joint_parent_child = {}
-            self.joint_positions = {}
-            self.joint_axis = {}
-            self.link_sensor_check = {}
-            self.link_positions = {}
-            self.link_sizes = {}
+            self.jointPosDict = {}
+            self.jointAxisDict = {}
+            self.sensorExists = {}
+            self.linkPos = {}
+            self.linkSize = {}
             for link in self.areaSort:
-                self.sideGraph[link] = [None] * 6
-                self.edge_graph[link] = []
-
+                self.linktoSidesDict[link] = [None] * 6
+                self.linkJointDict[link] = []
             self.areaSort = sorted(self.areaLink, key=self.areaLink.get, reverse=True)
             label = 0
             for s in self.areaSort:
@@ -319,25 +316,25 @@ class SOLUTION:
                 larger_blocks = self.areaSort[:i]
                 while True:
                     choose_block = random.choice(larger_blocks)
-                    if len(self.edge_graph[choose_block]) < 6:
-                        self.edge_graph[choose_block].append(link)
+                    if len(self.linkJointDict[choose_block]) < 6:
+                        self.linkJointDict[choose_block].append(link)
                         break
                     larger_blocks.remove(choose_block)
-
             self.findZ = (len(self.areaSort)/2) + 1
             for i, link in enumerate(self.areaSort):
                 if i == 0:
                     self.parentDict[link] = None
-                connectLinks = self.edge_graph[link]
-                available_indices = [i for i, x in enumerate(self.sideGraph[link]) if x is None]
+                connectLinks = self.linkJointDict[link]
+                available_indices = [i for i, x in enumerate(self.linktoSidesDict[link]) if x is None]
                 for connectLink in connectLinks:
                     chosen_side = random.choice(available_indices)
-                    self.sideGraph[link][chosen_side] = connectLink
+                    self.linktoSidesDict[link][chosen_side] = connectLink
+                    # check if even
                     if chosen_side % 2 == 0:
-                        self.sideGraph[connectLink][chosen_side + 1] = []
+                        self.linktoSidesDict[connectLink][chosen_side + 1] = []
                         self.parentDict[connectLink] = chosen_side + 1
                     else:
-                        self.sideGraph[connectLink][chosen_side - 1] = []
+                        self.linktoSidesDict[connectLink][chosen_side - 1] = []
                         self.parentDict[connectLink] = chosen_side - 1
                     available_indices.remove(chosen_side)
 
@@ -351,29 +348,29 @@ class SOLUTION:
                     if sensorCheck > 0.5:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]),pos=[0, 0, self.findZ/2.0],size=list(link),material_name="Green",rgba="0 1 0 1")
                         self.sensors.append(self.labels[link])
-                        self.link_sensor_check[self.labels[link]] = True
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = [0, 0, self.findZ/2.0]
+                        self.sensorExists[self.labels[link]] = True
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = [0, 0, self.findZ/2.0]
                     else:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]),pos=[0, 0, self.findZ/2.0],size=list(link))
-                        self.link_sensor_check[self.labels[link]] = False
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = [0, 0, self.findZ/2.0]
+                        self.sensorExists[self.labels[link]] = False
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = [0, 0, self.findZ/2.0]
                 else:
                     randomChoice = random.randint(0,1)
                     position = findDir(parent_direction, link)
                     if randomChoice == 0:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]), pos=position,size=list(link),material_name="Green",rgba="0 1 0 1")
                         self.sensors.append(self.labels[link])
-                        self.link_sensor_check[self.labels[link]] = True
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = position
+                        self.sensorExists[self.labels[link]] = True
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = position
                     else:
                         pyrosim.Send_Cube(name="Link" + str(self.labels[link]), pos=position,size=list(link))
-                        self.link_sensor_check[self.labels[link]] = False
-                        self.link_sizes[self.labels[link]] = list(link)
-                        self.link_positions[self.labels[link]] = position
-                connectLinks = self.sideGraph[link]
+                        self.sensorExists[self.labels[link]] = False
+                        self.linkSize[self.labels[link]] = list(link)
+                        self.linkPos[self.labels[link]] = position
+                connectLinks = self.linktoSidesDict[link]
 
                 for i, connectLink in enumerate(connectLinks):
                     if connectLink == None or connectLink == []:
@@ -388,11 +385,11 @@ class SOLUTION:
                         jointPos = getjointPosForRoot(i, x, y, z)
                     else:
                         jointPos = getjointPos(parent_direction, i, link)
-                    pyrosim.Send_Joint(name=jointName, parent="Link" + str(self.labels[link]),child="Link" + str(self.labels[connectLink]),type="revolute",position=jointPos,jointAxis=randomjoint)
+                    pyrosim.Send_Joint(name=jointName, parent="Link"+str(self.labels[link]),child="Link"+str(self.labels[connectLink]),type="revolute",position=jointPos,jointAxis=randomjoint)
                     self.motors.append(jointName)
                     self.joint_parent_child[jointName] = {'parent': "Link" + str(self.labels[link]),'child': "Link" + str(self.labels[connectLink])}
-                    self.joint_positions[jointName] = jointPos
-                    self.joint_axis[jointName] = randomjoint
+                    self.jointPosDict[jointName] = jointPos
+                    self.jointAxisDict[jointName] = randomjoint
             pyrosim.End()
             os.system("del brain" + str(self.myID) + ".nndf")
             self.Create_Brain()
@@ -400,13 +397,13 @@ class SOLUTION:
             os.system("del body" + str(self.myID) + ".urdf")
             pyrosim.Start_URDF("body" + str(self.myID) + ".urdf")
             for link in self.areaSort:
-                if self.link_sensor_check[self.labels[link]]:
-                    pyrosim.Send_Cube(name="Link" + str(self.labels[link]),pos=self.link_positions[self.labels[link]],size=self.link_sizes[self.labels[link]],material_name="Green",rgba="0 1 0 1")
+                if self.sensorExists[self.labels[link]]:
+                    pyrosim.Send_Cube(name="Link" + str(self.labels[link]),pos=self.linkPos[self.labels[link]],size=self.linkSize[self.labels[link]],material_name="Green",rgba="0 1 0 1")
                     self.sensors.append(self.labels[link])
                 else:
-                    pyrosim.Send_Cube(name="Link" + str(self.labels[link]),pos=self.link_positions[self.labels[link]],size=self.link_sizes[self.labels[link]])
+                    pyrosim.Send_Cube(name="Link" + str(self.labels[link]),pos=self.linkPos[self.labels[link]],size=self.linkSize[self.labels[link]])
             for current_joint in self.motors:
-                pyrosim.Send_Joint(name=current_joint, parent=self.joint_parent_child[current_joint]['parent'],child=self.joint_parent_child[current_joint]['child'],type="revolute",position=self.joint_positions[current_joint],jointAxis=self.joint_axis[current_joint])
+                pyrosim.Send_Joint(name=current_joint, parent=self.joint_parent_child[current_joint]['parent'],child=self.joint_parent_child[current_joint]['child'],type="revolute",position=self.jointPosDict[current_joint],jointAxis=self.jointAxisDict[current_joint])
             pyrosim.End()
             os.system("del brain" + str(self.myID) + ".nndf")
             self.Create_Brain()
