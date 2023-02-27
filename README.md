@@ -9,7 +9,8 @@ Running the Code:
 Expanding the random creature generator to 3D
 ----------------------------------
 This code creates a 3D creature or animal using rectangular prism and a random number of links/sensor placements. The links are colored either blue or green. The links with the color green have sensors while the blue links are links without sensors. In order to generate to randomly generate a morphology, I chose random sized cubes, sensors, and joints and combined them.
-![Untitled Notebook 5-1](https://user-images.githubusercontent.com/98376049/220240861-147931a1-0cf9-4b29-b33d-3ce197868b93.png)
+
+![IMG_0309](https://user-images.githubusercontent.com/98376049/221701647-4ab2cfee-9ffc-4139-b18b-0bbec4c2b111.jpg)
 
 Changing the random creature for fitness
 --------------------------------
