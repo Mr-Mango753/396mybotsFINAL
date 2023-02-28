@@ -24,9 +24,9 @@ class SOLUTION:
         os.system("start /B python3 simulate.py " + directOrGUI + " " + str(self.myID))
         while not os.path.exists("fitness" + str(self.myID) + ".txt"):
             time.sleep(0.05)
-        fitnessFile = open("fitness" + str(self.myID) + ".txt", "r")
-        self.fitness = float(fitnessFile.read())
-        fitnessFile.close()
+        f = open("fitness" + str(self.myID) + ".txt", "r")
+        self.fitness = float(f.read())
+        f.close()
 
     def Start_Simulation(self, directOrGUI):
         self.Create_Body()
@@ -39,9 +39,9 @@ class SOLUTION:
         while not os.path.exists("fitness" + str(self.myID) + ".txt"):
             time.sleep(0.05)
         time.sleep(0.05)
-        fitnessFile = open("fitness" + str(self.myID) + ".txt", "r")
-        self.fitness = float(fitnessFile.read())
-        fitnessFile.close()
+        f = open("fitness" + str(self.myID) + ".txt", "r")
+        self.fitness = float(f.read())
+        f.close()
         os.system("del " + "fitness" + str(self.myID) + ".txt")
 
     def Create_Body(self):
