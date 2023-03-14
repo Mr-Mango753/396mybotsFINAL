@@ -1,6 +1,7 @@
 CS396 Artificial Life - Jadon Lau
 ----------------------------------
 Here's a GIF teaser of the robot evolution:
+
 ![FinalVideo](https://user-images.githubusercontent.com/98376049/224922750-b30eabb9-eacc-45e0-855d-1025cc42850e.gif)
 
 
