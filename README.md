@@ -7,7 +7,7 @@ Here's a GIF teaser of the robot evolution:
 
 Here's a Youtube link with further information on the robot's evolution:
 
-https://www.youtube.com/watch?v=uT-AnFQynWU&ab_channel=JadonL.
+[https://www.youtube.com/watch?v=uT-AnFQynWU&ab_channel=JadonL.](https://youtu.be/0aDG6SjG670)
 
 
 Expanding the random creature generator to 3D
@@ -45,5 +45,7 @@ Note: You can change generation and population values in the cosntant.py folder.
 
 -----------------------------
 Credit: Much of the code and the information used to make these robots were taken from the ludobots subreddit: https://www.reddit.com/r/ludobots/
+
 I also had much help thanks to posts made in Campuswire by TA's and students alike.
+
 This was made with the guidance of Profesor Sam Kriegman and his CS396-Artificial Life class at Northwestern University.
