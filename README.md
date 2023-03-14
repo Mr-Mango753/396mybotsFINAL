@@ -31,7 +31,6 @@ Fitness
 Robots that had the best fitness were written in the parallelHillClimber file which measured the robots ability to move along the negative part of the x-axis. Parallel hill climber would allow the simulation to run many robots in parallel and find the most fit robot out of a specific population. That data would then get saved and compared with the next generation. A robot that was able to move further through the x-axis was given a higher fitness function. Higher fitnesses were saved and compared to next generations. The fitness function was used againt 100 generations and a population size of 3. Larger generations and populations can/should be used for computer with higher processing power. Here are five fitness curves of the best creatures. The x-axis represents generation while the y-axis represents fitness levels. 
 
 ![396HW8 fitness charts (1)-1](https://user-images.githubusercontent.com/98376049/224924321-8a982c7b-162e-43b5-963c-7cd1d2954316.jpg)
-
 ------------------------------
 Running the Code:
 ------------------------
