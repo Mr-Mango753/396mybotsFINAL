@@ -29,7 +29,7 @@ Better body's fitnesses were saved and the brains were updated everytime mutate 
 
 Fitness
 --------------------------
-Robots that had the best fitness were written in the parallelHillClimber file which measured the robots ability to move along the negative part of the x-axis. Parallel hill climber would allow the simulation to run many robots in parallel and find the most fit robot out of a specific population. That data would then get saved and compared with the next generation. A robot that was able to move further through the x-axis was given a higher fitness function. Higher fitnesses were saved and compared to next generations. The fitness function was used againt 100 generations and a population size of 3. Larger generations and populations can be used but it ran too slowly on my local machine. Here are five fitness curves of the best creatures. The x-axis represents generation while the y-axis represents fitness levels. 
+Robots that had the best fitness were written in the parallelHillClimber file which measured the robots ability to move along the negative part of the x-axis. Parallel hill climber would allow the simulation to run many robots in parallel and find the most fit robot out of a specific population. That data would then get saved and compared with the next generation. A robot that was able to move further through the x-axis was given a higher fitness function. Higher fitnesses were saved and compared to next generations. The fitness function was used againt 100 generations and a population size of 3. Larger generation and population sizes can be used although it would take much longer. Here are five fitness curves of the best creatures. The x-axis represents generations while the y-axis represents fitness levels. 
 
 ![396HW8 fitness charts (1)-1](https://user-images.githubusercontent.com/98376049/224924321-8a982c7b-162e-43b5-963c-7cd1d2954316.jpg)
 ------------------------------
@@ -37,15 +37,15 @@ Running the Code:
 ------------------------
 1.) Clone the repository
 
-2.) Run the command: "pip3 install pybullet" in the terminal to properly run simulation.
+2.) Run the command: "pip3 install pybullet" in the terminal to properly install packages to run simulation.
 
 3.) Run the search.py file in the folder
 
-Note: You can change generation and population values in the cosntant.py folder. You can also see the fitness of each generation through the fitnessPlot.txt file. This was used to plot the various fitness of different robots.
+Note: You can change generation and population values in the constant.py folder. You can also see the fitnesses of each generation through the fitnessPlot.txt file. This was used to plot the various fitness of different robots.
 
 -----------------------------
 Credit: Much of the code and the information used to make these robots were taken from the ludobots subreddit: https://www.reddit.com/r/ludobots/
 
-I also had much help thanks to posts made in Campuswire by TA's and students alike.
+I also had help from posts made in our classes Campuswire page. Thank you to the students and TA alike.
 
 This was made with the guidance of Profesor Sam Kriegman and his CS396-Artificial Life class at Northwestern University.
