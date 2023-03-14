@@ -19,7 +19,7 @@ This code creates a 3D creature or animal using rectangular prism and a random n
 
 Changing the random creature for fitness
 --------------------------------
-I chose to have two options to change the creature for fitness. The first one is the same as it usually was, which was changing the sensor weights. For this assignment, however, I also wanted to change the links placement so that the morphology could change to a better creature as it evolved. I did this by randomly adding links to to robot at every generation and testing their fitness. 
+I chose to have two options to change the creature for fitness. The first one is the same as it usually was, which was changing the sensor weights. For this assignment, however, I also wanted to change the links placement so that the morphology could change to a better creature as it evolved. I did this by randomly adding/removing links to to robot at every generation and testing their fitness. 
 
 Here's a diagram of a random addition of a link:
 
