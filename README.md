@@ -7,6 +7,8 @@ Here's a GIF teaser of the robot evolution:
 
 Here's a Youtube link with further information on the robot's evolution:
 
+
+
 Expanding the random creature generator to 3D
 ----------------------------------
 This code creates a 3D creature or animal using rectangular prism and a random number of links/sensor placements. The links are colored either blue or green. The links with the color green have sensors while the blue links are links without sensors. In order to generate to randomly generate a morphology, I chose random sized cubes, sensors, and joints and combined them.
@@ -25,11 +27,13 @@ Fitness
 --------------------------
 Robots that had the best fitness were written in the parallelHillClimber file which measured the robots ability to move along the negative part of the x-axis. Parallel hill climber would allow the simulation to run many robots in parallel and find the most fit robot out of a specific population. That data would then get saved and compared with the next generation. A robot that was able to move further through the x-axis was given a higher fitness function. Higher fitnesses were saved and compared to next generations. The fitness function was used againt 100 generations and a population size of 3. Larger generations and populations can/should be used for computer with higher processing power. Here are five fitness curves of the best creatures. The x-axis represents generation while the y-axis represents fitness levels. 
 
-[396HW8 fitness charts.pdf](https://github.com/Mr-Mango753/396mybotsHW8/files/10844856/396HW8.fitness.charts.pdf)
+![396HW8 fitness charts (1)-1](https://user-images.githubusercontent.com/98376049/224924321-8a982c7b-162e-43b5-963c-7cd1d2954316.jpg)
+
 ------------------------------
 Running the Code:
 
 1.) Clone the repository
+
 2.) Run the search.py file in the folder
 
 -----------------------------
