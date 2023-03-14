@@ -43,8 +43,6 @@ Running the Code:
 
 Note: You can change generation and population values in the cosntant.py folder. You can also see the fitness of each generation through the fitnessPlot.txt file. This was used to plot the various fitness of different robots.
 
-Extra Note: You may run into errors with permission errors. If the population size or generation size is too large this may occasionally occur.
-
 -----------------------------
 Credit: Much of the code and the information used to make these robots were taken from the ludobots subreddit: https://www.reddit.com/r/ludobots/
 I also had much help thanks to posts made in Campuswire by TA's and students alike.
