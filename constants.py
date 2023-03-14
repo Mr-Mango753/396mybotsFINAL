@@ -27,7 +27,7 @@ linkcount = numpy.random.randint(10)
 numSensorNeurons = linkcount + 2
 numMotorNeurons = linkcount + 1
 
-numoflinks = random.randint(7,12)
+numoflinks = random.randint(3,5)
 
 
 motorJointRange = .3

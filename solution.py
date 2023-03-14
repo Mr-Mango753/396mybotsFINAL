@@ -206,17 +206,17 @@ class SOLUTION:
             
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork("brain" + str(self.myID) + ".nndf")
-        j = 0
+        increment = 0
         self.numMotors = 0
         self.numSensors = 0
-        for i in self.motors:
-            pyrosim.Send_Motor_Neuron(name=j, jointName=i)
-            self.numMotors += 1
-            j += 1
         for i in self.sensors:
-            pyrosim.Send_Sensor_Neuron(name=j, linkName="Link"+str(i))
+            pyrosim.Send_Sensor_Neuron(name=increment, linkName="Link"+str(i))
             self.numSensors += 1
-            j += 1
+            increment += 1
+        for i in self.motors:
+            pyrosim.Send_Motor_Neuron(name=increment, jointName=i)
+            self.numMotors += 1
+            increment+=1
         self.weights = (numpy.random.rand(self.numSensors, self.numMotors) * 2) - 1
         for currentRow in range(self.numSensors):
             for currentColumn in range(self.numMotors):
