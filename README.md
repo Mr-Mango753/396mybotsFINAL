@@ -1,6 +1,6 @@
 CS396 Artificial Life - Jadon Lau
 ----------------------------------
-This is the Artist's approach for 16 points:
+This is the Artist's approach for 16 points
 
 Here's a GIF teaser of the robot evolution:
 
